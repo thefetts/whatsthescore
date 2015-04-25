@@ -3,6 +3,7 @@
 To install:
 ```
 git clone https://github.com/thefetts/whatsthescore
+cd whatsthescore
 bower install
 ```
 No build tool needed yet, just open index.html in Chrome
