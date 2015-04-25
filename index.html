@@ -7,15 +7,26 @@
 		<script src="app.js"></script>
 	</head>
 	<body ng-app="sportsScores">
-		<div ng-controller="appController">
-			<span>Today's Score Is</span>
-			<div class="boxscore" ng-if="data.loadedScores">
-				<div class="score">{{data.homeScore}}</div> to <div class="score">{{data.awayScore}}</div>
+		<div class="container" ng-controller="appController">
+			<div style="font-size:32px;" ng-if="data.error === 'old'">
+				Sorry, MLB's API doesn't have JSON data prior to 2007 and I'll be god damned if I'm parsing XML for this
 			</div>
-			<div class="boxscore" ng-if="!data.loadedScores">
-				loading...
+			<div style="font-size:32px;" ng-if="data.error === 'future'">
+				Sorry, MLB's API doesn't have JSON data for the future yet and I'll be god damned if I'm seeking out a psychic for this
 			</div>
-
+			<div style="font-size:32px;" ng-if="data.error === 'apiDown'">
+				Sorry, MLB's API is apparently down? Or probably we hit a bad endpoint. Or something else went wrong. Too bad.
+			</div>
+			<div ng-if="!data.error">
+				<span>Today's Score Is</span>
+				<div class="boxscore" ng-if="data.loadedScores">
+					<div class="score">{{data.homeScore}}</div> to <div class="score">{{data.awayScore}}</div>
+				</div>
+				<div class="boxscore" ng-if="!data.loadedScores">
+					loading...
+				</div>
+			</div>
+			<br/>
 			<span>Previous Scores:</span>
 			<input type="date" ng-model="data.date" ng-change="initialize()">
 		</div>
