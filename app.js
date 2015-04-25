@@ -14,8 +14,9 @@ app.controller('appController', function($scope, $http) {
 	};
 
 	$scope.initialize = function() {
-		$scope.setDateValues();
-		$scope.updateScores();
+		if($scope.setDateValues()) {
+			$scope.updateScores();
+		}
 	};
 
 	$scope.dateIsOk = function() {
@@ -34,13 +35,17 @@ app.controller('appController', function($scope, $http) {
 	};
 
 	$scope.setDateValues = function() {
-		$scope.data.year = $scope.data.date.getFullYear();
+		if($scope.data.date) {
+			$scope.data.year = $scope.data.date.getFullYear();
 
-		var month = $scope.data.date.getMonth() + 1;
-		$scope.data.month = month > 9 ? month : '0'+month;
+			var month = $scope.data.date.getMonth() + 1;
+			$scope.data.month = month > 9 ? month : '0'+month;
 
-		var day = $scope.data.date.getDate();
-		$scope.data.day = day > 9 ? day : '0'+day;
+			var day = $scope.data.date.getDate();
+			$scope.data.day = day > 9 ? day : '0'+day;
+			return true;
+		}
+		return false;
 	};
 
 	$scope.updateScores = function() {
