@@ -1,34 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="sportsScores" ng-controller="appController">
 	<head>
-		<title>Today's Sports Score</title>
+		<title>Today's Score</title>
+		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script src="bower_components/angular/angular.min.js"></script>
 		<script src="app.js"></script>
 	</head>
-	<body ng-app="sportsScores">
-		<div class="container" ng-controller="appController">
-			<div style="font-size:32px;" ng-if="data.error === 'old'">
+	<body ng-keydown="keyDown($event)">
+		<div class="container">
+			<h1>Today's Cumulative Score Is</h1>
+			<div class="col-md-6 col-md-offset-3 alert alert-danger" ng-if="data.error === 'old'">
 				Sorry, MLB's API doesn't have JSON data prior to 2007 and I'll be god damned if I'm parsing XML for this
 			</div>
-			<div style="font-size:32px;" ng-if="data.error === 'future'">
+			<div class="col-md-6 col-md-offset-3 alert alert-danger" ng-if="data.error === 'future'">
 				Sorry, MLB's API doesn't have JSON data for the future yet and I'll be god damned if I'm seeking out a psychic for this
 			</div>
-			<div style="font-size:32px;" ng-if="data.error === 'apiDown'">
+			<div class="col-md-6 col-md-offset-3 alert alert-danger" ng-if="data.error === 'apiDown'">
 				Sorry, MLB's API is apparently down? Or probably we hit a bad endpoint. Or something else went wrong. Too bad.
 			</div>
-			<div ng-if="!data.error">
-				<span>Today's Score Is</span>
-				<div class="boxscore" ng-if="data.loadedScores">
-					<div class="score">{{data.homeScore}}</div> to <div class="score">{{data.awayScore}}</div>
+
+			<div ng-if="!data.error" class="col-md-12">
+				<div class="col-md-4 col-md-offset-4" ng-if="data.loadedScores">
+					<div class="row">
+						<div class="col-md-4 highlight">
+							<div>home</div>
+							<div class="score">{{data.homeScore}}</div>
+						</div>
+						<div class="col-md-4" style="line-height: 147px;">to</div>
+						<div class="col-md-4 highlight">
+							<div>away</div>
+							<div class="score">{{data.awayScore}}</div>
+						</div>
+					</div>
 				</div>
-				<div class="boxscore" ng-if="!data.loadedScores">
-					loading...
+				<div class="col-md-12" ng-show="!data.loadedScores">
+					<div class="row">
+						<div style="height: 147px; line-height: 147px; margin-bottom: 14px;">
+							loading...
+						</div>
+					</div>
 				</div>
 			</div>
-			<br/>
-			<span>Previous Scores:</span>
-			<input type="date" ng-model="data.date" ng-change="initialize()">
+
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="date">Previous Scores</label>
+					<input type="date" id="date" class="form-control" ng-model="data.date" ng-change="initialize()">
+				</div>
+			</form>
 		</div>
 	</body>
 </html>

@@ -1,6 +1,7 @@
 var app = angular.module('sportsScores', []);
 
 app.controller('appController', function($scope, $http) {
+
 	$scope.data = {
 		loadedScores: false,
 		homeScore: 0,
@@ -14,12 +15,27 @@ app.controller('appController', function($scope, $http) {
 	};
 
 	$scope.initialize = function() {
-		if($scope.setDateValues()) {
-			$scope.updateScores();
+		if(setDateValues()) {
+			updateScores();
+		}
+	};
+	$scope.initialize();
+
+	$scope.keyDown = function(e) {
+		if(e.target.id !== 'date' && (e.which == 37 || e.which == 39)) {
+			var d = $scope.data.date;
+			if(e.which == 37) {
+				d = d.setDate(d.getDate()-1);
+			} else if(e.which == 39) {
+				d = d.setDate(d.getDate()+1);
+			}
+			$scope.data.date = new Date(d);
+			$scope.initialize();
 		}
 	};
 
-	$scope.dateIsOk = function() {
+	// PRIVATE METHODS
+	function dateIsOk() {
 		var d = new Date();
 		if($scope.data.year > 2006) {
 			var d2 = new Date($scope.data.year, $scope.data.month-1, $scope.data.day);
@@ -32,9 +48,9 @@ app.controller('appController', function($scope, $http) {
 			$scope.data.error = 'old';
 		}
 		return false;
-	};
+	}
 
-	$scope.setDateValues = function() {
+	function setDateValues() {
 		if($scope.data.date) {
 			$scope.data.year = $scope.data.date.getFullYear();
 
@@ -46,9 +62,9 @@ app.controller('appController', function($scope, $http) {
 			return true;
 		}
 		return false;
-	};
+	}
 
-	$scope.updateScores = function() {
+	function updateScores() {
 		$scope.data.homeScore = 0;
 		$scope.data.awayScore = 0;
 		$scope.data.loadedScores = false;
@@ -56,7 +72,7 @@ app.controller('appController', function($scope, $http) {
 		var timeStamp = (new Date()).getTime().toString();
 		$scope.data.updateTimestamp = timeStamp;
 
-		if($scope.dateIsOk()) {
+		if(dateIsOk()) {
 			var url = 'http://gd2.mlb.com/components/game/mlb'+
 				'/year_'+$scope.data.year+
 				'/month_'+$scope.data.month+
@@ -87,7 +103,6 @@ app.controller('appController', function($scope, $http) {
 		} else {
 			$scope.data.loadedScores = true;
 		}
-	};
+	}
 
-	$scope.initialize();
 });
